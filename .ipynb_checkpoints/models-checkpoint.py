@@ -56,8 +56,8 @@ class Model:
         # acc = accuracy_score(y_test, new_pred)
 
         # save model
-        save_model(self.classifier, model_name)
-        print('Classification Model saved as: ' + model_name)
+        # save_model(self.classifier, model_name)
+        
 
         return self.classifier, df, accuracy, new_pred
 
@@ -69,6 +69,8 @@ class Model:
     def save_model(self, filename='my_model'):
         with open(filename, 'wb') as file:
             pickle.dump(self.classifier, file)
+        print('Classification Model saved as: ' + filename)
+        st.info(f'Classifier model successfully built and saved{filename}')
 
 
             
@@ -140,10 +142,11 @@ class Model2:
         print(f'history of model {model_name}, saved as hist_{model_name} at {hist_path}')
         
         # model_name_h5 = f'{model_name}.h5'
-
-        self.model.save('Models/mynewmodel')
+        # mod = 'Models/'
+        # '{}'.format("new\nline")
+        self.model.save(f'Models/{model_name}')
         print(f'Regression Model saved as: {model_name}')
-        return self.model, history, data_train, loss, mae
+        return self.model, history, loss, mae
 
     def load_model(self, model_name='my_reg_model'):
         rg_model = load_model(model_name)

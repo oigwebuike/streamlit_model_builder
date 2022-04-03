@@ -183,37 +183,52 @@ def predict_view():
     else:
         model = Model2()
     
-    with st.sidebar.form(key='PredictData'):
+    my_file = st.sidebar.file_uploader('My file')
+    
+    with st.sidebar.form(key='ChooseFile'):
         
-        my_file = st.file_uploader('My file')
-        my_model = st.file_uploader('My model')
+        if my_file is not None:
+            file_details = {"FileName":my_file.name,"FileType":my_file.type,"FileSize":my_file.size}
+
+
+            df = pd.read_csv(my_file)
+            
+            # y = st.sidebar.selectbox('Select column for prediction', df.columns)
+            # y = df[y]
+
+            del_col = st.sidebar.multiselect('Select drop column(s)', df.columns)
+            df_pred = df.drop(columns=del_col)
+        else:
+            st.info('No files selected')
+            df = pd.DataFrame({'A' : []}) # emoty dataframe   
         # model_details = {"FileName":my_model.name,"FileType":my_model.type,"FileSize":my_model.size}
 
-        st.form_submit_button('PRD')
+        st.form_submit_button('FIL')
 
-    if my_file is not None:
-
-        file_details = {"FileName":my_file.name,"FileType":my_file.type,"FileSize":my_file.size}
-        df = pd.read_csv(my_file)
-        if my_model is not None:
+    my_model = st.sidebar.file_uploader('My model')
+    
+    
+    with st.sidebar.form(key='PredictData'):
         
+        if my_model is not None:
             model_details = {"FileName":my_model.name,"FileType":my_model.type,"FileSize":my_model.size}
-            y = st.selectbox('Select column for prediction', df.columns)
-            y = df[y]
-            pred_y = model.predict(y)
+            
+            # y = df[y]
+            # with st.sidebar.form(key='PredictData'):
+                
+            model = model.load_model(my_model.name)
+            pred_y = model.predict(df_pred)
+            # df['y'] = y
             df['predicted'] = pred_y
             st.write(model_details)
+            # st.form_submit_button('PRD')
         
         else:
             st.info('No model selected')
             # df = pd.DataFrame({'A' : []}) # emoty dataframe
-        
-    else:
-        st.info('No files selected')
-        df = pd.DataFrame({'A' : []}) # emoty dataframe   
-   
-        
     
+        st.form_submit_button('PRD')
+        
     st.dataframe(df)
     
     # st.write(model_details)
