@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import seaborn as sns
 import pandas as pd
@@ -8,6 +9,7 @@ from models import Model, Model2
 from sklearn import datasets
 from sklearn.datasets import  load_boston, load_breast_cancer, load_diabetes, load_digits
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 sns_datasets = sns.get_dataset_names()
