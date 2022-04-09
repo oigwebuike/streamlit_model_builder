@@ -155,7 +155,7 @@ def model_view(model1, model2):
         y = st.selectbox('y-column', df.columns)
         drop_cols = st.multiselect('Drop columns', df.columns)
     
-        st.form_submit_button('MD')
+        st.form_submit_button('Select Model-type')
                      
     with st.sidebar.form(key='Choose Model'):
         modl_name = st.text_input('Enter model name', '')
@@ -195,15 +195,12 @@ def predict_view():
 
             df = pd.read_csv(my_file)
             
-            # y = st.sidebar.selectbox('Select column for prediction', df.columns)
-            # y = df[y]
-
             del_col = st.sidebar.multiselect('Select drop column(s)', df.columns)
             df_pred = df.drop(columns=del_col)
         else:
             st.info('No files selected')
-            df = pd.DataFrame({'A' : []}) # emoty dataframe   
-        # model_details = {"FileName":my_model.name,"FileType":my_model.type,"FileSize":my_model.size}
+            df = pd.DataFrame({'A' : []}) # emoty dataframe 
+            df_pred = pd.DataFrame({'A' : []})
 
         st.form_submit_button('FIL')
 
@@ -214,9 +211,6 @@ def predict_view():
         
         if my_model is not None:
             model_details = {"FileName":my_model.name,"FileType":my_model.type,"FileSize":my_model.size}
-            
-            # y = df[y]
-            # with st.sidebar.form(key='PredictData'):
                 
             model = model.load_model(my_model.name)
             pred_y = model.predict(df_pred)
@@ -230,8 +224,13 @@ def predict_view():
             # df = pd.DataFrame({'A' : []}) # emoty dataframe
     
         st.form_submit_button('PRD')
+    
+    if df_pred is not None:
+        st.dataframe(df_pred)
+    else:
+        st.dataframe(df)
         
-    st.dataframe(df)
+    # st.dataframe(df)
     
     # st.write(model_details)
 
